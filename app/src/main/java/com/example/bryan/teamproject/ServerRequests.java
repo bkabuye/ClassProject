@@ -52,7 +52,7 @@ public class ServerRequests {
     }
 
     public void fetchUserDataInBackground(ProjectUser projectUser, GetUserCallback callback) {
-        progressDialog.show();
+        //progressDialog.show();
         new fetchUserDataAsyncTask(projectUser, callback).execute();
     }
 
@@ -189,7 +189,7 @@ public class ServerRequests {
         @Override
         protected void onPostExecute(ProjectUser returnedProjectUser) {
             progressDialog.dismiss();
-            userCallback.done(null);
+            userCallback.done(returnedProjectUser);
             super.onPostExecute(returnedProjectUser);
         }
     }
