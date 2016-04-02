@@ -22,10 +22,10 @@ import org.json.JSONObject;
 
 import java.io.Console;
 
-public class User {
+public class ProjectUser {
     String Firstname, Lastname, username, passWord, email, token;
     Context context;
-    TokenTest test;
+    //TokenTest test;
     userLocalStore localstore;
     /**
      * method to store data
@@ -35,7 +35,7 @@ public class User {
      * @param Username
      * @param password
      */
-    public User(String FirstName, String LastName, String Username, String password, String Email) {
+    public ProjectUser(String FirstName, String LastName, String Username, String password, String Email) {
         this.username = Username;
         this.Firstname = FirstName;
         this.Lastname = LastName;
@@ -44,16 +44,20 @@ public class User {
     }
 
     /**
-     * method to cater to already existing user
+     * method to cater to already existing projectUser
      *
      * @param Username
      * @param Password
      */
-    public User(String Username, String Password, String token) {
+    public ProjectUser(String Username, String Password, String token) {
         this.username = Username;
         this.passWord = Password;
         this.token = token;
     }
 
+    public ProjectUser(String Username, String Password) {
+        this.username = Username;
+        this.passWord = Password;
+    }
 
 }

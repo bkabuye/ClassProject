@@ -1,17 +1,17 @@
 package com.example.bryan.teamproject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class signin extends AppCompatActivity {
+public class signin extends Activity {
     EditText userName, passWord;
     Button signIn;
     ImageButton backbutton;
@@ -48,16 +48,8 @@ public class signin extends AppCompatActivity {
                             passWord.requestFocus();
                             passWord.setError("FIELD CANNOT BE EMPTY, PLEASE ENTER CORRECT PASSWORD");
                         } else {
-
-                            if(localStore.authenticate(username, password)==true){
-                                Toast.makeText(getApplicationContext(), "Validation Successful", Toast.LENGTH_LONG).show();
-                                UserLogIn(); //set userlogin in to true and navigate to next page
-                            }
-
-                            else {
-                                Toast.makeText(getApplicationContext(), "User could not be validated for a token", Toast.LENGTH_LONG).show();
-                            }
-
+                             ProjectUser projectUser = new ProjectUser(username, password);
+                             authenticate(projectUser);
                         }
                         break;
                     case R.id.forgotPassword:
@@ -76,10 +68,36 @@ public class signin extends AppCompatActivity {
         backbutton.setOnClickListener(handler);
     }
 
-   private void UserLogIn() {
-        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+    private void authenticate(ProjectUser projectUser) {
+        ServerRequests serverRequests = new ServerRequests(getApplicationContext());
+        serverRequests.fetchUserDataInBackground(projectUser, new GetUserCallback() {
+            @Override
+            public void done(ProjectUser returnedProjectUser) {
+
+                if (returnedProjectUser == null) {
+                    showErrorMessage();
+                } else {
+                    logUserIn(returnedProjectUser);
+                }
+            }
+        });
     }
 
+    private void showErrorMessage() {
+        AlertDialog.Builder dialogbuileder = new AlertDialog.Builder(this);
+        dialogbuileder.setMessage("ProjectUser could not be validated for a token");
+        dialogbuileder.setPositiveButton("Ok", null);
+        dialogbuileder.show();
+    }
+    private void logUserIn(ProjectUser returnedProjectUser){
+        userLocalStore.storeUserData(returnedProjectUser);
+        userLocalStore.setUserLoggedIn(true);
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
+
+    /*private void UserLogIn() {
+        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+    }*/
 
     private void goback() {
         startActivity(new Intent(this, MainActivity.class));

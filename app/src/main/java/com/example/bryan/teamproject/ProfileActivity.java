@@ -2,14 +2,10 @@ package com.example.bryan.teamproject;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.content.Intent;
-import android.view.View.OnClickListener;
-import android.view.Menu;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -64,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void displayUserDetails() {
-        User user = localStore.getLoggedInUser();
-        greeting_msg_txtView.setText("Welcome back,"+"\t" + user.username +"\t");
+        ProjectUser projectUser = localStore.getLoggedInUser();
+        greeting_msg_txtView.setText("Welcome back,"+"\t" + projectUser.username +"\t");
     }
 }

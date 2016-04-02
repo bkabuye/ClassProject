@@ -84,7 +84,7 @@ public class ProjectLayout extends RelativeLayout implements OnClickListener{
         {
             case R.id.completed_checkBox:
                 break;
-            default: //when user clicks anywhere except the checkbox, then we go the ProjectInfoActivity.java
+            default: //when projectUser clicks anywhere except the checkbox, then we go the ProjectInfoActivity.java
                 Intent intent = new Intent(context, ProjectProfileActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
