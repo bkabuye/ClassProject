@@ -26,6 +26,7 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
     private ImageButton project_add_btn;
     private ListView project_listView;
     private userLocalStore localStore;
+    private  Project project;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
 
         project_listView = (ListView)findViewById(R.id.project_listView);
         localStore = new userLocalStore(getApplicationContext());
+         project =  new Project();
         refreshProjectList();
     }
 
@@ -44,7 +46,6 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
     {
         Context context = getApplicationContext();
         ArrayList<Project> projects = new ArrayList<Project>();
-        Project project = new Project();
         for(int i=0; i < project.getOwner().size(); i++){
             Project p1 = new Project(i, project.getTitle().get(i), project.getDescription().get(i), "1", "0");
             projects.add(p1);
@@ -79,6 +80,9 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
                 return true;
             case R.id.log_out:
                 localStore.clearUserData();
+                project.getDescription().clear();
+                project.getTitle().clear();
+                project.getOwner().clear();
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             default:
