@@ -251,6 +251,7 @@ public class ServerRequests {
                     project.setTitle(c.getString("title"));
                     project.setDescription(c.getString("description"));
                     project.setOwner(c.getString("owner"));
+                    project.setId(c.getInt("id"));
                 }
                    project.setLoadedInfo(true);
             } catch (Exception ex) {

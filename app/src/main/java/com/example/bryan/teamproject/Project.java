@@ -14,8 +14,9 @@ public class Project {
     public int projectId;
     public int listId;
     public static ArrayList<String> Title = new ArrayList<String>();
-    public static ArrayList<String> Description = new ArrayList<>();
-    public static ArrayList<String> Owner = new ArrayList<>();
+    public static ArrayList<String> Description = new ArrayList<String>();
+    public static ArrayList<String> Owner = new ArrayList<String>();
+    public static ArrayList<Integer> ProjectId = new ArrayList<Integer>();
     public String title;
     public String description;
     public String completed;
@@ -77,8 +78,13 @@ public class Project {
         return projectId;
     }
 
+    public ArrayList<Integer> getProjectId(){
+        return ProjectId;
+    }
+
     public void setId(int id) {
         this.projectId = id;
+        ProjectId.add(projectId);
     }
 
     public long getListId() {

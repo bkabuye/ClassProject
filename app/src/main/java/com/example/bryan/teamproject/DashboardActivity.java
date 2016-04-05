@@ -47,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
         Context context = getApplicationContext();
         ArrayList<Project> projects = new ArrayList<Project>();
         for(int i=0; i < project.getOwner().size(); i++){
-            Project p1 = new Project(i, project.getTitle().get(i), project.getDescription().get(i), "1", "0");
+            Project p1 = new Project(project.getProjectId().get(i), project.getTitle().get(i), project.getDescription().get(i), "1", "0");
             projects.add(p1);
         }
         ProjectListAdapter adapter = new ProjectListAdapter(context, projects);
@@ -83,6 +83,7 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
                 project.getDescription().clear();
                 project.getTitle().clear();
                 project.getOwner().clear();
+                project.getProjectId().clear();
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
             default:
