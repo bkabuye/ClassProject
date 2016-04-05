@@ -1,12 +1,21 @@
 package com.example.bryan.teamproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ChihWu on 3/22/16.
  */
 public class Project {
 
-    public long projectId;
-    public long listId;
+    public int projectId;
+    public int listId;
+    public static ArrayList<String> Title = new ArrayList<String>();
+    public static ArrayList<String> Description = new ArrayList<>();
+    public static ArrayList<String> Owner = new ArrayList<>();
     public String title;
     public String description;
     public String completed;
@@ -15,6 +24,14 @@ public class Project {
 
     public static final String TRUE = "1";
     public static final String FALSE = "0";
+
+    static SharedPreferences projectLocalDatabase;
+    public static final String SP_NAME = "ProjectDetails";
+
+    public Project(Context context) {
+        projectLocalDatabase = context.getSharedPreferences(SP_NAME, 0);
+
+    }
 
     public Project() {
         title = "";
@@ -25,7 +42,7 @@ public class Project {
     }
 
     public Project(int listId, String name, String description, String owner
-                ,String completed, String hidden) {
+            , String completed, String hidden) {
         this.listId = listId;
         this.title = name;
         this.description = description;
@@ -46,22 +63,21 @@ public class Project {
         this.hidden = hidden;
     }
 
-    public Project(int listId, String title, String description, String owner){
+    public Project(int listId, String title, String description) {
         this.title = title;
         this.description = description;
-        this.owner = owner;
+        this.owner = "";
         this.projectId = -1;
         this.listId = listId;
-        this.completed = "";
-        this.hidden = "";
-
+        this.completed = completed;
+        this.hidden = hidden;
     }
 
     public long getId() {
         return projectId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.projectId = id;
     }
 
@@ -69,25 +85,37 @@ public class Project {
         return listId;
     }
 
-    public void setListId(long listId) {
+    public void setListId(int listId) {
         this.listId = listId;
     }
 
-    public String getTitle() {
-        return title;
+    public List<String> getTitle() {
+        return Title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public List<String> getDescription() {
+
+        return Description;
     }
 
-    public String getDescription() {
-        return description;
+    public void setTitle(String values) {
+        title = values;
+        Title.add(title);
     }
 
+    public void setDescription(String descriptions) {
+        description = descriptions;
+        Description.add(description);
+    }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setOwner(String owners) {
+        owner = owners;
+        Owner.add(owner);
+    }
+
+    public List<String> getOwner() {
+
+        return Owner;
     }
 
     public String getCompleted() {
@@ -95,11 +123,25 @@ public class Project {
     }
 
 
-    public String getHidden(){
+    public String getHidden() {
         return hidden;
     }
 
     public void setHidden(String hidden) {
         this.hidden = hidden;
+    }
+
+    public static boolean getLoaded() {
+        if (projectLocalDatabase.getBoolean("loaded", false) == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setLoadedInfo(boolean loaded) {
+        SharedPreferences.Editor spEditor = projectLocalDatabase.edit();
+        spEditor.putBoolean("loaded", loaded);
+        spEditor.commit();
     }
 }

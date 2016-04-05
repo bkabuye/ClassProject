@@ -5,5 +5,5 @@ package com.example.bryan.teamproject;
  */
 interface GetUserCallback {
 
-    public abstract void done(ProjectUser returnedProjectUser);
+    public abstract void done(User returnedUser);
 }

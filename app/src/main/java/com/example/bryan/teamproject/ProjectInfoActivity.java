@@ -14,7 +14,5 @@ public class ProjectInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_info);
     }
-
-
-
+    
 }

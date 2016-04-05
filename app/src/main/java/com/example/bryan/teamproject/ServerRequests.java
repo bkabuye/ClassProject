@@ -17,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,40 +29,43 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class ServerRequests {
-    ProgressDialog progressDialog;
     //private final String localhost = "http://127.0.0.1:8000/";
     private final String serverAddress = "http://128.197.103.77/";
     private final int connection_timeout = 1000 * 15;
     //String api_getProjects = "api/projects/";
     private final String api_getRegister = "signup/";
     private final String api_token = "get-token/";
+    private ProgressDialog progressDialog;
     private JSONObject token = null;
 
 
     public ServerRequests(Context context) {
         progressDialog = new ProgressDialog(context);
-        progressDialog.setCancelable(false);
         progressDialog.setTitle("Processing");
         progressDialog.setMessage("Please Wait...");
-
     }
 
-    public void storeUserDataInBackground(ProjectUser projectUser, GetUserCallback userCallBack) {
-        progressDialog.show();
-        new storeUserDataAsyncTask(projectUser, userCallBack).execute();
-    }
-
-    public void fetchUserDataInBackground(ProjectUser projectUser, GetUserCallback callback) {
+    public void storeUserDataInBackground(User user, GetUserCallback userCallBack) {
         //progressDialog.show();
-        new fetchUserDataAsyncTask(projectUser, callback).execute();
+        new storeUserDataAsyncTask(user, userCallBack).execute();
+    }
+
+    public void fetchUserDataInBackground(User user, GetUserCallback callback) {
+        //progressDialog.show();
+        new fetchUserDataAsyncTask(user, callback).execute();
+    }
+
+    public void fetchProjectDataInBackground(User user, GetProjectCallback callback) {
+        //progressDialog.show();
+        new fetchProjectDataAsyncTask(user, callback).execute();
     }
 
     public class storeUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
-        ProjectUser projectUser;
+        User user;
         GetUserCallback userCallback;
 
-        public storeUserDataAsyncTask(ProjectUser projectUser, GetUserCallback callback) {
-            this.projectUser = projectUser;
+        public storeUserDataAsyncTask(User user, GetUserCallback callback) {
+            this.user = user;
             this.userCallback = callback;
         }
 
@@ -69,11 +73,11 @@ public class ServerRequests {
         protected Void doInBackground(Void... params) {
             //Data to send to server
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("firstname", projectUser.Firstname));
-            dataToSend.add(new BasicNameValuePair("lastname", projectUser.Lastname));
-            dataToSend.add(new BasicNameValuePair("username", projectUser.username));
-            dataToSend.add(new BasicNameValuePair("password", projectUser.passWord));
-            dataToSend.add(new BasicNameValuePair("email", projectUser.email));
+            dataToSend.add(new BasicNameValuePair("firstname", user.Firstname));
+            dataToSend.add(new BasicNameValuePair("lastname", user.Lastname));
+            dataToSend.add(new BasicNameValuePair("username", user.username));
+            dataToSend.add(new BasicNameValuePair("password", user.passWord));
+            dataToSend.add(new BasicNameValuePair("email", user.email));
 
             //Set to servertimeouts and requests
             HttpParams httpRequestParams = new BasicHttpParams();
@@ -101,18 +105,18 @@ public class ServerRequests {
         }
     }
 
-    public class fetchUserDataAsyncTask extends AsyncTask<Void, Void, ProjectUser> {
-        ProjectUser projectUser;
+    public class fetchUserDataAsyncTask extends AsyncTask<Void, Void, User> {
+        User user;
         GetUserCallback userCallback;
-        ProjectUser returnedProjectUser = null;
+        User returnedUser = null;
 
-        public fetchUserDataAsyncTask(ProjectUser projectUser, GetUserCallback callback) {
-            this.projectUser = projectUser;
+        public fetchUserDataAsyncTask(User user, GetUserCallback callback) {
+            this.user = user;
             this.userCallback = callback;
         }
 
         @Override
-        protected ProjectUser doInBackground(Void... params) {
+        protected User doInBackground(Void... params) {
             //Data to send to server
 
             try {
@@ -130,8 +134,8 @@ public class ServerRequests {
                 con.setDoInput(true);
 
                 JSONObject credentials = new JSONObject();
-                credentials.put("username", "" + projectUser.username + "");
-                credentials.put("password", "" + projectUser.passWord + "");
+                credentials.put("username", "" + user.username + "");
+                credentials.put("password", "" + user.passWord + "");
 
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
                 wr.writeBytes(credentials.toString());
@@ -171,7 +175,9 @@ public class ServerRequests {
             } catch (Exception ex) {
                 System.out.print(ex.fillInStackTrace());
             }
-            return (new ProjectUser(projectUser.username, projectUser.passWord, getTokenValue()));
+            returnedUser = new User(user.username, user.passWord, getTokenValue());
+            //fetchProjects();
+            return returnedUser;
         }
 
         public String getTokenValue() {
@@ -187,10 +193,78 @@ public class ServerRequests {
         }
 
         @Override
-        protected void onPostExecute(ProjectUser returnedProjectUser) {
+        protected void onPostExecute(User returnedUser) {
             progressDialog.dismiss();
-            userCallback.done(returnedProjectUser);
-            super.onPostExecute(returnedProjectUser);
+            userCallback.done(returnedUser);
+            super.onPostExecute(returnedUser);
         }
     }
+
+
+    // class to fetch Projects Async Task
+    public class fetchProjectDataAsyncTask extends AsyncTask<Void, Void, Boolean> {
+        private User user;
+        private GetProjectCallback projectCallback;
+        private Project project = new Project();
+        public fetchProjectDataAsyncTask(User user, GetProjectCallback callbackproject) {
+            projectCallback = callbackproject;
+            this.user = user;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            //Data to send to server
+            String api_getProjects = "api/projects/";
+            String url = serverAddress + api_getProjects;
+
+            try {
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                // optional default is GET
+                con.setRequestMethod("GET");
+                //add request header
+                //con.setRequestProperty("User-Agent", USER_AGENT);
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "JWT " + user.token);
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'GET' request to URL : " + url);
+                System.out.println("Response Code : " + responseCode);
+                BufferedReader in;
+                if (responseCode >= 400) {
+                    in = new BufferedReader(
+                            new InputStreamReader(con.getErrorStream()));
+                } else {
+                    in = new BufferedReader(
+                            new InputStreamReader(con.getInputStream()));
+                }
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                //print result
+                JSONArray arrays = new JSONArray(response.toString());
+                for (int i = 0; i < arrays.length(); i++) {
+                    JSONObject c = arrays.getJSONObject(i);
+                    project.setTitle(c.getString("title"));
+                    project.setDescription(c.getString("description"));
+                    project.setOwner(c.getString("owner"));
+                }
+                   project.setLoadedInfo(true);
+            } catch (Exception ex) {
+                System.out.print(ex.fillInStackTrace());
+            }
+          return project.getLoaded();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean loaded) {
+            //progressDialog.dismiss();
+            projectCallback.done(loaded);
+            super.onPostExecute(loaded);
+        }
+    }
+
 }

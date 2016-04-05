@@ -81,9 +81,9 @@ public class Register extends AppCompatActivity {
                         } else {
                             if (validateEmail(Email) == true) {
 
-                                ProjectUser registeredData = new ProjectUser(FirstName, LastName, Username, Pass, Email);
+                                User registeredData = new User(FirstName, LastName, Username, Pass, Email);
                                 registerNewUser(registeredData);
-                                Toast.makeText(Register.this, "ProjectUser has been Successful Added", Toast.LENGTH_LONG).show();
+                                Toast.makeText(Register.this, "User has been Successful Added", Toast.LENGTH_LONG).show();
                             }
                         }
                         break;
@@ -109,12 +109,12 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private void registerNewUser(ProjectUser newData) {
+    private void registerNewUser(User newData) {
         ServerRequests serverRequests = new ServerRequests(this);
         serverRequests.storeUserDataInBackground(newData, new GetUserCallback() {
 
             @Override
-            public void done(ProjectUser returnedProjectUser) {
+            public void done(User returnedUser) {
                 startActivity(new Intent(getApplicationContext(), signin.class));
             }
         });

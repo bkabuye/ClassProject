@@ -25,9 +25,8 @@ public class ProjectListAdapter extends BaseAdapter{
     @Override
     public int getCount()
     {
-        Log.i("ATTENTION : ",Integer.toString(projects.size()));
+        Log.i("ATTENTION : ",Integer.toString(5));
         return projects.size();
-
     }
 
     @Override

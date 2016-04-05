@@ -48,8 +48,8 @@ public class signin extends Activity {
                             passWord.requestFocus();
                             passWord.setError("FIELD CANNOT BE EMPTY, PLEASE ENTER CORRECT PASSWORD");
                         } else {
-                             ProjectUser projectUser = new ProjectUser(username, password);
-                             authenticate(projectUser);
+                             User user = new User(username, password);
+                             authenticate(user);
                         }
                         break;
                     case R.id.forgotPassword:
@@ -68,16 +68,16 @@ public class signin extends Activity {
         backbutton.setOnClickListener(handler);
     }
 
-    private void authenticate(ProjectUser projectUser) {
+    private void authenticate(User user) {
         ServerRequests serverRequests = new ServerRequests(getApplicationContext());
-        serverRequests.fetchUserDataInBackground(projectUser, new GetUserCallback() {
+        serverRequests.fetchUserDataInBackground(user, new GetUserCallback() {
             @Override
-            public void done(ProjectUser returnedProjectUser) {
+            public void done(User returnedUser) {
 
-                if (returnedProjectUser == null) {
+                if (returnedUser == null) {
                     showErrorMessage();
                 } else {
-                    logUserIn(returnedProjectUser);
+                    logUserIn(returnedUser);
                 }
             }
         });
@@ -85,19 +85,15 @@ public class signin extends Activity {
 
     private void showErrorMessage() {
         AlertDialog.Builder dialogbuileder = new AlertDialog.Builder(this);
-        dialogbuileder.setMessage("ProjectUser could not be validated for a token");
+        dialogbuileder.setMessage("User could not be validated for a token");
         dialogbuileder.setPositiveButton("Ok", null);
         dialogbuileder.show();
     }
-    private void logUserIn(ProjectUser returnedProjectUser){
-        userLocalStore.storeUserData(returnedProjectUser);
+    private void logUserIn(User returnedUser){
+        userLocalStore.storeUserData(returnedUser);
         userLocalStore.setUserLoggedIn(true);
         startActivity(new Intent(this, ProfileActivity.class));
     }
-
-    /*private void UserLogIn() {
-        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-    }*/
 
     private void goback() {
         startActivity(new Intent(this, MainActivity.class));

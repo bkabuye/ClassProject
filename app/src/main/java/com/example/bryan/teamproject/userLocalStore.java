@@ -14,32 +14,31 @@ public class userLocalStore {
         userLocalDatabase = context.getSharedPreferences(SP_NAME, 0);
     }
 
-
-    public static void storeUserData(ProjectUser projectUser) {
+    public static void storeUserData(User user) {
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
-        spEditor.putString("username", projectUser.username);
-        spEditor.putString("password", projectUser.passWord);
-        spEditor.putString("token", projectUser.token);
+        spEditor.putString("username", user.username);
+        spEditor.putString("password", user.passWord);
+        spEditor.putString("token", user.token);
         spEditor.commit();
     }
 
 
-    public ProjectUser getLoggedInUser() {
+    public User getLoggedInUser() {
         String username = userLocalDatabase.getString("username", "");
         String password = userLocalDatabase.getString("password","");
         String token = userLocalDatabase.getString("token", "");
-        ProjectUser storedProjectUser = new ProjectUser(username, password, token);
-        return storedProjectUser;
+        User storedUser = new User(username, password, token);
+        return storedUser;
     }
 
-    public ProjectUser getNewUser(){
+    public User getNewUser(){
         String firstName = userLocalDatabase.getString("firstname", "");
         String lastName = userLocalDatabase.getString("lastname", "");
         String email = userLocalDatabase.getString("email", "");
         String username = userLocalDatabase.getString("username", "");
         String password = userLocalDatabase.getString("password","");
-        ProjectUser newProjectUser = new ProjectUser(firstName, lastName, email, username, password);
-        return newProjectUser;
+        User newUser = new User(firstName, lastName, email, username, password);
+        return newUser;
     }
 
     public boolean getUserLoggedIn() {
@@ -56,52 +55,9 @@ public class userLocalStore {
         spEditor.commit();
     }
 
-
     public void clearUserData() {
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
         spEditor.clear();
         spEditor.commit();
     }
-
-   /* public boolean authenticate(String username, String password){
-        TokenTest test = new TokenTest(username, password);
-        try {
-            test.getToken();
-            if(test.getTokenValue() != null){
-           // System.out.println("passed: " + test.getTokenValue());
-            ProjectUser projectUser = new ProjectUser(username, password, test.getTokenValue());
-            storeUserData(projectUser);
-            setUserLoggedIn(true);
-                test.sendGet();
-            return true;
-            } else{
-                System.out.println("failed get a token, projectUser not yet registered : " + test.getTokenValue());
-                System.exit(0);
-            }
-
-        }
-
-        catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public static void setProjects(JSONArray array){
-        JSONArray arrays = array;
-        try {
-            for (int i = 0; i < arrays.length(); i++) {
-                JSONObject c = array.getJSONObject(i);
-                String title = c.getString("title");
-                String description = c.getString("description");
-                String owner = c.getString("owner");
-                System.out.println(" "+title+" \n " + description+" \n \t"+owner+"\n");
-                Project _project = new Project(i, title, description, owner);
-            }
-        }
-        catch(Exception e){
-
-            System.out.println(e.fillInStackTrace());
-        }
-    }*/
 }

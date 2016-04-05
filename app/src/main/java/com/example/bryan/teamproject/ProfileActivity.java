@@ -1,5 +1,6 @@
 package com.example.bryan.teamproject;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +14,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Button requirement_tracker_btn;
     private Button comm_tool;
     private Button issue_tracker;
-    userLocalStore localStore;
+    private Project project;
+    private userLocalStore localStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,13 +25,28 @@ public class ProfileActivity extends AppCompatActivity {
         comm_tool = (Button) findViewById(R.id.com_tool_btn);
         issue_tracker = (Button) findViewById(R.id.issue_tracker_btn);
         localStore = new userLocalStore(getApplicationContext());
+        project = new Project(getApplicationContext());
         View.OnClickListener handler = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
            switch (v.getId()){
                case R.id.requirement_tracker_btn:
-                   startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                   ServerRequests requestData = new ServerRequests(getApplicationContext());
+                   requestData.fetchProjectDataInBackground(localStore.getLoggedInUser(),new GetProjectCallback() {
+                       @Override
+                       public boolean done(Boolean returnedProjects) {
+                           if (returnedProjects == false) {
+                               showErrorMessage();
+                               //return false;
+                           } else {
+                               startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                              // return true;
+                           }
+                       return false;
+                       }
+                   });
+
                    break;
                case R.id.com_tool_btn:
                    v.setEnabled(false);
@@ -43,6 +60,13 @@ public class ProfileActivity extends AppCompatActivity {
         requirement_tracker_btn.setOnClickListener(handler);
         comm_tool.setOnClickListener(handler);
         issue_tracker.setOnClickListener(handler);
+    }
+
+    private void showErrorMessage() {
+        AlertDialog.Builder dialogbuileder = new AlertDialog.Builder(this);
+        dialogbuileder.setMessage("Missing projects");
+        dialogbuileder.setPositiveButton("Ok", null);
+        dialogbuileder.show();
     }
 
     @Override
@@ -60,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void displayUserDetails() {
-        ProjectUser projectUser = localStore.getLoggedInUser();
-        greeting_msg_txtView.setText("Welcome back,"+"\t" + projectUser.username +"\t");
+        User user = localStore.getLoggedInUser();
+        greeting_msg_txtView.setText("Welcome back,"+"\t" + user.username +"\t");
     }
 }
