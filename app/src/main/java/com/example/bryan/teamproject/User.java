@@ -58,6 +58,7 @@ public class User {
     public User(String Username, String Password) {
         this.username = Username;
         this.passWord = Password;
+        //this.token = "";
     }
 
 }

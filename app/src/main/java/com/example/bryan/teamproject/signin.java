@@ -75,6 +75,9 @@ public class signin extends Activity {
             public void done(User returnedUser) {
 
                 if (returnedUser == null) {
+
+                    userLocalStore.setUserLoggedIn(false);
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     showErrorMessage();
                 } else {
                     logUserIn(returnedUser);
@@ -88,6 +91,7 @@ public class signin extends Activity {
         dialogbuileder.setMessage("User could not be validated for a token");
         dialogbuileder.setPositiveButton("Ok", null);
         dialogbuileder.show();
+
     }
     private void logUserIn(User returnedUser){
         userLocalStore.storeUserData(returnedUser);

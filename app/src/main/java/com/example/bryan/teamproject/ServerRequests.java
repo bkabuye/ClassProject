@@ -152,32 +152,36 @@ public class ServerRequests {
                 System.out.println(con.getContentLength());
 
                 BufferedReader in;
-                if (responseCode >= 400) {
-                    in = new BufferedReader(
-                            new InputStreamReader(con.getErrorStream()));
-                } else {
-                    in = new BufferedReader(
-                            new InputStreamReader(con.getInputStream()));
-                }
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                    if (!in.ready()) {
+                switch(responseCode){
+                    case 400:
+                        /*in = new BufferedReader(
+                                new InputStreamReader(con.getErrorStream()));*/
+                        returnedUser = new User(user.username, user.passWord, getTokenValue());
                         break;
-                    }
+                    case 200:
+                        in = new BufferedReader(
+                                new InputStreamReader(con.getInputStream()));
+                        String inputLine;
+                        StringBuffer response = new StringBuffer();
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
+                            if (!in.ready()) {
+                                break;
+                            }
+                        }
+                        in.close();
+                        //print result
+                        token = new JSONObject(response.toString());
+                        returnedUser = new User(user.username, user.passWord, getTokenValue());
+                      break;
+                    default:
+                        break;
                 }
-                in.close();
-                //print result
-                token = new JSONObject(response.toString());
-
             } catch (Exception ex) {
-                System.out.print(ex.fillInStackTrace());
-            }
-            returnedUser = new User(user.username, user.passWord, getTokenValue());
-            //fetchProjects();
-            return returnedUser;
+                    System.out.print(ex.fillInStackTrace());
+                }
+
+                return returnedUser;
         }
 
         public String getTokenValue() {
