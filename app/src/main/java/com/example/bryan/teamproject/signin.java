@@ -1,6 +1,8 @@
 package com.example.bryan.teamproject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -34,8 +36,8 @@ public class signin extends Activity {
                 switch (v.getId()) {
                     case R.id.submit:
                         //v.setEnabled(false);
-                        userName.setEnabled(false);
-                        passWord.setEnabled(false);
+                       // userName.setEnabled(false);
+                       // passWord.setEnabled(false);
                         String username = userName.getText().toString();
                         String password = passWord.getText().toString();
                         if (username.length() == 0) {
@@ -75,10 +77,9 @@ public class signin extends Activity {
             public void done(User returnedUser) {
 
                 if (returnedUser == null) {
-
-                    userLocalStore.setUserLoggedIn(false);
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     showErrorMessage();
+                    userLocalStore.setUserLoggedIn(false);
+                    //startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 } else {
                     logUserIn(returnedUser);
                 }
@@ -89,10 +90,16 @@ public class signin extends Activity {
     private void showErrorMessage() {
         AlertDialog.Builder dialogbuileder = new AlertDialog.Builder(this);
         dialogbuileder.setMessage("User could not be validated for a token");
-        dialogbuileder.setPositiveButton("Ok", null);
+        dialogbuileder.setPositiveButton("Ok", restart());
         dialogbuileder.show();
 
     }
+
+    private DialogInterface.OnClickListener restart() {
+        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        return null;
+    }
+
     private void logUserIn(User returnedUser){
         userLocalStore.storeUserData(returnedUser);
         userLocalStore.setUserLoggedIn(true);

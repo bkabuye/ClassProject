@@ -7,32 +7,28 @@ package com.example.bryan.teamproject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerRequests {
-    //private final String localhost = "http://127.0.0.1:8000/";
     private final String serverAddress = "http://128.197.103.77/";
     private final int connection_timeout = 1000 * 15;
-    //String api_getProjects = "api/projects/";
     private final String api_getRegister = "signup/";
     private final String api_token = "get-token/";
     private ProgressDialog progressDialog;
@@ -72,29 +68,56 @@ public class ServerRequests {
         @Override
         protected Void doInBackground(Void... params) {
             //Data to send to server
-            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            dataToSend.add(new BasicNameValuePair("firstname", user.Firstname));
-            dataToSend.add(new BasicNameValuePair("lastname", user.Lastname));
-            dataToSend.add(new BasicNameValuePair("username", user.username));
-            dataToSend.add(new BasicNameValuePair("password", user.passWord));
-            dataToSend.add(new BasicNameValuePair("email", user.email));
+            Map<String, String> dataToSend = new HashMap<>();
+            dataToSend.put("firstname", user.Firstname);
+            dataToSend.put("lastname", user.Lastname);
+            dataToSend.put("username", user.username);
+            dataToSend.put("password", user.passWord);
+            dataToSend.put("email", user.email);
 
-            //Set to servertimeouts and requests
-            HttpParams httpRequestParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpRequestParams, connection_timeout);
-            HttpConnectionParams.setSoTimeout(httpRequestParams, connection_timeout);
-
-            //set client
-            HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post = new HttpPost(serverAddress + api_getRegister);
+            String encodedStr = getEncodedData(dataToSend);
+            BufferedReader reader = null;
             try {
-                post.setEntity(new UrlEncodedFormEntity(dataToSend));
-                client.execute(post);
+                //connect ot URL
+                URL url = new URL(serverAddress + api_getRegister);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                //Post Method
+                con.setRequestMethod("POST");
+                //To enable inputting values using POST method
+                //(Basically, after this we can write the dataToSend to the body of POST method)
+                con.setDoOutput(true);
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                //Writing dataToSend to outputstreamwriter
+                writer.write(encodedStr);
+                //Sending the data to the server - This much is enough to send data to server
+                //But to read the response of the server, you will have to implement the procedure below
+                writer.flush();
+                //Data Read Procedure - Basically reading the data comming line by line
+                StringBuilder sb = new StringBuilder();
+                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) { //Read till there is something available
+                    sb.append(line + "\n");     //Reading and saving line by line - not all at once
+                }
+                line = sb.toString();           //Saving complete data received in string, you can do it differently
+
+                //Just check to the values received in Logcat
+                Log.i("custom_check", "The values received in the store part are as follows:");
+                Log.i("custom_check", line);
+
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            return null;
+                return null;
+            }
         }
 
         @Override
@@ -102,6 +125,19 @@ public class ServerRequests {
             progressDialog.dismiss();
             userCallback.done(null);
             super.onPostExecute(aVoid);
+        }
+
+        private String getEncodedData(Map<String, String> data) {
+            StringBuilder sb = new StringBuilder();
+            for (String key : data.keySet()) {
+                String value = null;
+                try {
+                    value = URLEncoder.encode(data.get(key), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            return sb.toString();
         }
     }
 
@@ -152,10 +188,8 @@ public class ServerRequests {
                 System.out.println(con.getContentLength());
 
                 BufferedReader in;
-                switch(responseCode){
+                switch (responseCode) {
                     case 400:
-                        /*in = new BufferedReader(
-                                new InputStreamReader(con.getErrorStream()));*/
                         returnedUser = new User(user.username, user.passWord, getTokenValue());
                         break;
                     case 200:
@@ -173,15 +207,15 @@ public class ServerRequests {
                         //print result
                         token = new JSONObject(response.toString());
                         returnedUser = new User(user.username, user.passWord, getTokenValue());
-                      break;
+                        break;
                     default:
                         break;
                 }
             } catch (Exception ex) {
-                    System.out.print(ex.fillInStackTrace());
-                }
+                System.out.print(ex.fillInStackTrace());
+            }
 
-                return returnedUser;
+            return returnedUser;
         }
 
         public String getTokenValue() {
@@ -210,6 +244,7 @@ public class ServerRequests {
         private User user;
         private GetProjectCallback projectCallback;
         private Project project = new Project();
+
         public fetchProjectDataAsyncTask(User user, GetProjectCallback callbackproject) {
             projectCallback = callbackproject;
             this.user = user;
@@ -257,11 +292,11 @@ public class ServerRequests {
                     project.setOwner(c.getString("owner"));
                     project.setId(c.getInt("id"));
                 }
-                   project.setLoadedInfo(true);
+                project.setLoadedInfo(true);
             } catch (Exception ex) {
                 System.out.print(ex.fillInStackTrace());
             }
-          return project.getLoaded();
+            return project.getLoaded();
         }
 
         @Override
