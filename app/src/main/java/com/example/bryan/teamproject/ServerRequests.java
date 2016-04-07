@@ -27,7 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerRequests {
-    private final String serverAddress = "http://128.197.103.77/";
+    //private final String serverAddress = "http://128.197.103.77/";
+    private final String serverAddress = "http://155.41.99.111/";
     private final int connection_timeout = 1000 * 15;
     private final String api_getRegister = "signup/";
     private final String api_token = "get-token/";
@@ -253,7 +254,7 @@ public class ServerRequests {
         @Override
         protected Boolean doInBackground(Void... params) {
             //Data to send to server
-            String api_getProjects = "api/projects/";
+            String api_getProjects = "api/"+user.username+"/projects/";
             String url = serverAddress + api_getProjects;
 
             try {
