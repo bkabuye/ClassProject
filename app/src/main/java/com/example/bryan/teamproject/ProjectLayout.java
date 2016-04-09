@@ -1,5 +1,6 @@
 package com.example.bryan.teamproject;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -13,18 +14,20 @@ import android.content.Intent;
 /**
  * Created by ChihWu on 3/22/16.
  */
-public class ProjectLayout extends RelativeLayout implements OnClickListener{
+public class ProjectLayout extends RelativeLayout implements OnClickListener {
 
     private Context context;
     private CheckBox completed_checkBox;
     private TextView project_name_txtView;
     private TextView project_description_txtView;
 
+
     private Project project;
 
     public ProjectLayout(Context context)
     {
         super(context);
+      // this.context = context;
     }
 
     public ProjectLayout(Context context, Project project)
@@ -82,10 +85,16 @@ public class ProjectLayout extends RelativeLayout implements OnClickListener{
             case R.id.completed_checkBox:
                 break;
             default: //when user clicks anywhere except the checkbox, then we go the ProjectInfoActivity.java
-                Intent intent = new Intent(context, ProjectProfileActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                context.startActivity(new Intent(this.context, ProjectProfileActivity.class));
         }
     }
+    /*
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        refreshProjectList();
+    }
+    */
 
 }

@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerRequests {
-    //private final String serverAddress = "http://128.197.103.77/";
-    private final String serverAddress = "http://155.41.99.111/";
+    private final String serverAddress = "http://128.197.103.77/";
+    //private final String serverAddress = "http://155.41.96.36:8000/";
     private final int connection_timeout = 1000 * 15;
     private final String api_getRegister = "signup/";
     private final String api_token = "get-token/";

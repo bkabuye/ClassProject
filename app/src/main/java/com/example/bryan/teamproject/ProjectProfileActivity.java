@@ -25,6 +25,7 @@ public class ProjectProfileActivity extends FragmentActivity {
         tabHost.setup();
         tabManager = new TabManager(this, tabHost, R.id.realtabcontent);
 
+
         String[] tabNames = {"Icebox", "Iteration", "UserList"};
         for(String tabName : tabNames)
         {

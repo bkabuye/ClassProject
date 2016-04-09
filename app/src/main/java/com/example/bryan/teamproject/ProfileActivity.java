@@ -43,10 +43,10 @@ public class ProfileActivity extends AppCompatActivity {
                                startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                               // return true;
                            }
-                       return false;
+                    return false;
                        }
                    });
-
+                    v.setEnabled(false);
                    break;
                case R.id.com_tool_btn:
                    v.setEnabled(false);

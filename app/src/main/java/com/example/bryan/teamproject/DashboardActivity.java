@@ -18,6 +18,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 
@@ -27,39 +28,46 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
     private ListView project_listView;
     private userLocalStore localStore;
     private  Project project;
+    private ArrayList<Project> projects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
         project_add_btn = (ImageButton)findViewById(R.id.project_add_button);
         project_add_btn.setOnClickListener(this);
-
         project_listView = (ListView)findViewById(R.id.project_listView);
         localStore = new userLocalStore(getApplicationContext());
+        projects =  new ArrayList<Project>();
          project =  new Project();
-        refreshProjectList();
+         refreshProjectList();
     }
 
     public void refreshProjectList()
     {
         Context context = getApplicationContext();
-        ArrayList<Project> projects = new ArrayList<Project>();
+        projects = new ArrayList<Project>();
         for(int i=0; i < project.getOwner().size(); i++){
             Project p1 = new Project(project.getProjectId().get(i), project.getTitle().get(i), project.getDescription().get(i), "1", "0");
             projects.add(p1);
         }
+
         ProjectListAdapter adapter = new ProjectListAdapter(context, projects);
         project_listView.setAdapter(adapter);
+
+        Toast.makeText(this,Integer.toString(projects.size()), Toast.LENGTH_SHORT ).show();
     }
 
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+    }
 
     @Override
-    public void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        refreshProjectList();
+
     }
 
     @Override
@@ -108,7 +116,20 @@ public class DashboardActivity extends AppCompatActivity implements OnClickListe
 
                 newFragment.show(ft, "add new project");
                 break;
+            //case android.R.id.home :
+
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        projects.clear();
+        project.getDescription().clear();
+        project.getTitle().clear();
+        project.getOwner().clear();
+        project.getProjectId().clear();
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 
 
