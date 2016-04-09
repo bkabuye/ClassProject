@@ -8,4 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="SpecificTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionBarWidgetTheme">@style/MyActionBarWidgetStyle</item>
+    </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="MyActionBarWidgetStyle">
+        <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@android:style/Widget.Holo.Light.ListView.DropDown</item>
+    </style>
+
+    <style name="TitleStyle" parent="@android:style/TextAppearance.Medium">
+
+        <item name="android:textStyle">bold</item>
+
+    </style>
 </resources>

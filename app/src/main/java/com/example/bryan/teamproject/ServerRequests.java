@@ -30,7 +30,7 @@ public class ServerRequests {
     private final String serverAddress = "http://128.197.103.77/";
     //private final String serverAddress = "http://155.41.96.36:8000/";
     private final int connection_timeout = 1000 * 15;
-    private final String api_getRegister = "signup/";
+    private final String api_getRegister = "apisignup/";
     private final String api_token = "get-token/";
     private ProgressDialog progressDialog;
     private JSONObject token = null;
@@ -75,7 +75,7 @@ public class ServerRequests {
             dataToSend.put("username", user.username);
             dataToSend.put("password", user.passWord);
             dataToSend.put("email", user.email);
-
+            //json object
             String encodedStr = getEncodedData(dataToSend);
             BufferedReader reader = null;
             try {
@@ -84,25 +84,19 @@ public class ServerRequests {
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 //Post Method
                 con.setRequestMethod("POST");
-                //To enable inputting values using POST method
-                //(Basically, after this we can write the dataToSend to the body of POST method)
+
                 con.setDoOutput(true);
                 OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
                 //Writing dataToSend to outputstreamwriter
                 writer.write(encodedStr);
-                //Sending the data to the server - This much is enough to send data to server
-                //But to read the response of the server, you will have to implement the procedure below
                 writer.flush();
-                //Data Read Procedure - Basically reading the data comming line by line
                 StringBuilder sb = new StringBuilder();
                 reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String line;
-                while ((line = reader.readLine()) != null) { //Read till there is something available
-                    sb.append(line + "\n");     //Reading and saving line by line - not all at once
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
                 }
-                line = sb.toString();           //Saving complete data received in string, you can do it differently
-
-                //Just check to the values received in Logcat
+                line = sb.toString();
                 Log.i("custom_check", "The values received in the store part are as follows:");
                 Log.i("custom_check", line);
 

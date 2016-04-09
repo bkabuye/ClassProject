@@ -1,6 +1,7 @@
 package com.example.bryan.teamproject;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -22,7 +23,7 @@ import android.widget.Toast;
 
 import java.lang.reflect.Array;
 
-public class DashboardActivity extends AppCompatActivity implements OnClickListener, OnTouchListener{
+public class DashboardActivity extends Activity implements OnClickListener, OnTouchListener{
 
     private ImageButton project_add_btn;
     private ListView project_listView;

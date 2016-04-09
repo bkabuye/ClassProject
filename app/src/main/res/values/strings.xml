@@ -3,16 +3,16 @@
     <string name="action_settings">Settings</string>
     <string name="forgot_password"><u>Forgot Password ?</u></string>
     <string name="username">Username</string>
-    <string name="username_hint">Username </string>
+    <string name="username_hint">Username field</string>
     <string name="password">Password</string>
-    <string name="password_hint">Password</string>
+    <string name="password_hint">Password field</string>
     <string name="confirmPassword_hint">Confirm Pass</string>
     <string name="confirmPassword">Confirm </string>
     <string name="signIn_name">Sign In</string>
     <string name="signUp_name">Sign Up</string>
     <string name="back_button"><ul>Back</ul></string>
     <string name="person_firstname">First name</string>
-    <string name="firstname_hint">firstname </string>
+    <string name="firstname_hint">firstname field</string>
     <string name="person_lastname">Last name</string>
     <string name="lastname_hint">lastname field</string>
     <string name="person_email">Email</string>
@@ -28,14 +28,61 @@
     <string name="change_password">Change Password</string>
     <string name="logout">Log Out</string>
     <string name="dashboard_title">Dashboard</string>
+    <string name="project_id">Id</string>
     <string name="project_name">Project</string>
     <string name="project_description">Description</string>
-    <string name="project_name_txtView">Project Name</string>
-    <string name="project_description_txtView">Project Description</string>
+    <string name="project_name_label_txtView">Title:</string>
+    <string name="project_description_label_txtView">Description:</string>
     <string name="create_btn">Create</string>
     <string name="cancel">Cancel</string>
     <string name="tab_list_fragment_txt">Hello</string>
+    <string name="edit_project_info_btn">Edit Project</string>
+    <string name="save_project_edit_info_btn">Save Changes</string>
+    <string name="delete_project_info_btn">Delete</string>
+    <string name="icebox_title">Icebox</string>
+    <string name="user_story_name_txtView">User Story</string>
 
+    <string name="back_btn">Back</string>
+    <string name="user_story_title_txtView">Title:</string>
+    <string name="user_story_description_txtView">Description:</string>
+    <string name="user_story_reason_txtView">Reason:</string>
+    <string name="user_story_test_txtView">Test:</string>
+    <string name="user_story_owner_txtView">Story Owner:</string>
+    <string name="user_story_hours_txtView">Hours:</string>
+    <string name="user_story_status_txtView">Status:</string>
+    <string name="user_story_scale_point_txtView">Scale Points:</string>
+    <string name="user_story_pause_txtView">Paused:</string>
+    <string name="user_story_reassign_txtView">Reassign to Project:</string>
+    <string name="user_story_add_new_btn">Add New Story</string>
+    <string name="user_story_save_changes_btn">Save Changes</string>
+    <string name="user_story_add_dialog_title_txtView"><u>Add a New User Story</u></string>
+    <string name="iteration_title">Iterations</string>
+    <string name="iteration_name_txtView">Iteration</string>
+    <string name="iteration_description_txtView">Description</string>
+    <string name="iteration_title_txtView">Title:</string>
+    <string name="iteration_start_date_txtView">Start Date:</string>
+    <string name="iteration_end_date_txtView">End Date:</string>
+    <string name="pick_date">Select a date</string>
+    <string name="iteration_save_change_btn">Save Changes</string>
+    <string name="iteration_add_title"><u>Add a New Iteration</u></string>
+    <string name="userlist_title">User List</string>
+    <string name="userlist_name_txtView">User Name</string>
+    <string name="user_add_dialog_title_txtView"><u>Add a New User</u></string>
+    <string name="user_email_add_txtView">Add a New User by Email:</string>
+    <string name="user_edit_dialog_title_txtView">Edit User</string>
+    <string name="user_group_change_txtView">Change User Group:</string>
+    <string name="user_save_changes_btn">Save Changes</string>
+    <string name="user_delete_btn">Delete User</string>
+
+    <string-array name="user_story_status_string_array">
+        <item>Unstarted</item>
+        <item>Started</item>
+        <item>Completed</item>
+        <item>Accepted</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
